@@ -43,36 +43,44 @@ def calculate_nutrition(meal_list):
         
         for item in meal_data.get('foods', []):
             food_name = item['name']
-            servings = item['servings']
+
+            if 'grams' in item:
+                # Se for peso, assume que a base do alimento é 100g
+                multiplier = item['grams'] / 100.0
+                display_qty = f"{item['grams']}g"
+            elif 'servings' in item:
+                multiplier = item['servings']
+                display_qty = f"{multiplier}x"
+            else:
+                multiplier = 1.0
+                display_qty = "1x"
             
             food_obj = library.get(food_name)
-            
             if not food_obj:
                 print(f"WARNING: '{food_name}' not in library.")
                 continue
             
             # Calculate amounts
-            protein = food_obj.protein.amount * servings
-            fat = food_obj.fat.amount * servings
-            carbs = food_obj.carbohydrate.amount * servings
-            fiber = food_obj.fiber.amount * servings
+            p = food_obj.protein.amount * multiplier
+            f = food_obj.fat.amount * multiplier
+            c = food_obj.carbohydrate.amount * multiplier
+            fib = food_obj.fiber.amount * multiplier
             
-            sugars = food_obj.carbohydrate.sugars * servings
-            complex = food_obj.carbohydrate.complex * servings
+            sug = food_obj.carbohydrate.sugars * multiplier
+            cplx = food_obj.carbohydrate.complex * multiplier
             
             # Update totals
-            totals['protein'] += protein
-            totals['fat'] += fat
-            totals['carbohydrate'] += carbs
-            totals['fiber'] += fiber
-            totals['sugars'] += sugars
-            totals['complex_carbs'] += complex
+            totals['protein'] += p
+            totals['fat'] += f
+            totals['carbohydrate'] += c
+            totals['fiber'] += fib
+            totals['sugars'] += sug
+            totals['complex_carbs'] += cplx
             
-            # Display
-            display_servings = f"{servings}x" if servings != 1 else ""
-            print(f"  {display_servings}{food_name}: P={protein:.1f}g C={carbs:.1f}g F={fat:.1f}g Fiber={fiber:.1f}g")
+            print(f"  {food_name} ({display_qty}): P={p:.1f}g C={c:.1f}g F={f:.1f}g")
         
         print()
+
     
     # Calculate total calories
     totals['calories'] = (
@@ -82,9 +90,9 @@ def calculate_nutrition(meal_list):
     )
     
     # Print summary
-    print("=" * 60)
+    print("=" * 20)
     print("DAILY TOTALS")
-    print("=" * 60)
+    print("=" * 20)
     print(f"Protein:         {totals['protein']:.1f}g")
     print(f"Carbohydrate:    {totals['carbohydrate']:.1f}g")
     print(f"  ├─ Sugars:     {totals['sugars']:.1f}g ({totals['sugars']/totals['carbohydrate']*100:.0f}%)" if totals['carbohydrate'] > 0 else "")
@@ -94,9 +102,9 @@ def calculate_nutrition(meal_list):
     print(f"\nTotal Calories:  {totals['calories']:.0f} kcal")
     
     # Macro ratios
-    print("\n" + "=" * 60)
+    print("\n" + "=" * 20)
     print("MACRO DISTRIBUTION")
-    print("=" * 60)
+    print("=" * 20)
     protein_pct = (totals['protein'] * 4 / totals['calories']) * 100
     carb_pct = (totals['carbohydrate'] * 4 / totals['calories']) * 100
     fat_pct = (totals['fat'] * 9 / totals['calories']) * 100
@@ -109,5 +117,5 @@ def calculate_nutrition(meal_list):
 
 
 if __name__ == "__main__":
-    my_day = ['breakfast', 'lunch']
+    my_day = ['yogurte']  # List of meal names to calculate
     calculate_nutrition(my_day)

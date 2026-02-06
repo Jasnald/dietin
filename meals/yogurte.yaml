@@ -1,0 +1,10 @@
+meal: "Iogurte Turbinado"
+foods:
+  - name: Iogurte_Ja_Sahne
+    grams: 100.0      # 100g (um pouco menos de meio pote grande)
+  - name: Müsli_Rewe
+    grams: 35.0      # 40g
+  - name: Aprikose_Triple
+    grams: 25.0      # 25g (uma colherada)
+  - name: Knackebrot
+    grams: 15.0      # 15g (umas 2 ou 3 fatias grandes)

@@ -1,86 +1,45 @@
-ChickenBreast100g:
-  macros:
-    protein: 31
-    fat: 3.6
-    carbohydrate: 0
-    fiber: 0
+# --- Novos Itens do Iogurte ---
 
-Egg:
+Iogurte_Ja_Sahne: # O pote branco "Ja!"
   macros:
-    protein: 6
-    fat: 5
-    carbohydrate: 0.6
-    fiber: 0
-
-Rice100g:
-  macros:
-    protein: 2.7
-    fat: 0.3
-    carbohydrate: 28
-    fiber: 0.4
+    protein: 4.0
+    fat: 10.0
+    carbohydrate: 4.9
+    fiber: 0.0
   distributions:
     carbohydrate:
-      sugars: 0.05
-      complex: 0.95
-
-WheyScoop:
-  macros:
-    protein: 24
-    fat: 1.5
-    carbohydrate: 3
-    fiber: 0
-  distributions:
-    carbohydrate:
-      sugars: 1.0
+      sugars: 1.0       # 4,9g de carbo, sendo 4,9g açúcar (100%)
       complex: 0.0
 
-Banana:
+Aprikose_Triple: # O pote de vidro (Geléia/Calda?)
   macros:
-    protein: 1.1
-    fat: 0.3
-    carbohydrate: 23
-    fiber: 2.6
+    protein: 0.7
+    fat: 0.1
+    carbohydrate: 10.0
+    fiber: 16.0         # Caramba, fibra pura mesmo!
   distributions:
     carbohydrate:
-      sugars: 0.52
-      complex: 0.48
+      sugars: 0.69      # 6,9g de açúcar em 10g totais
+      complex: 0.31
 
-Oats100g:
+Müsli_Rewe: # O pacote de Müsli Crocante
   macros:
-    protein: 13.2
-    fat: 6.9
-    carbohydrate: 67
-    fiber: 10.6
+    protein: 11.0
+    fat: 20.0
+    carbohydrate: 60.0
+    fiber: 6.1
   distributions:
     carbohydrate:
-      sugars: 0.015
-      complex: 0.985
+      sugars: 0.23      # 14g de açúcar em 60g totais
+      complex: 0.77
 
-Broccoli100g:
+Knackebrot: # O "pão seco" (Estimativa padrão, confira se tiver o pacote)
   macros:
-    protein: 2.8
-    fat: 0.4
-    carbohydrate: 7
-    fiber: 2.6
+    protein: 9.0
+    fat: 1.5
+    carbohydrate: 59.0
+    fiber: 16.0         # Geralmente gira em torno disso
   distributions:
     carbohydrate:
-      sugars: 0.24
-      complex: 0.76
-
-Salmon100g:
-  macros:
-    protein: 20
-    fat: 13
-    carbohydrate: 0
-    fiber: 0
-
-Avocado100g:
-  macros:
-    protein: 2
-    fat: 15
-    carbohydrate: 9
-    fiber: 7
-  distributions:
-    carbohydrate:
-      sugars: 0.07
-      complex: 0.93
+      sugars: 0.02
+      complex: 0.98
