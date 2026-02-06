@@ -2,6 +2,10 @@ import yaml
 from pathlib import Path
 from food import create_food
 
+def load_yaml(file_path):
+    with open(file_path, 'r', encoding='utf-8') as f:
+        data = yaml.safe_load(f) or {}
+    return data
 
 def load_library():
     """Reads all YAMLs in library/ and creates Food objects."""
@@ -10,8 +14,7 @@ def load_library():
     base_dir = Path(__file__).parent / 'library'
     
     for file_path in base_dir.glob('*.yaml'):
-        with open(file_path, 'r', encoding='utf-8') as f:
-            data = yaml.safe_load(f) or {}
+        data = load_yaml(file_path)
         
         for food_name, specs in data.items():
             library[food_name] = create_food(

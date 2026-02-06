@@ -1,0 +1,10 @@
+Tomate_Pelado: # Lata de tomate
+  macros:
+    protein: 1.2
+    fat: 0.1
+    carbohydrate: 4.0
+    fiber: 1.0
+  distributions:
+    carbohydrate:
+      sugars: 0.9 # Tomate é frutose basicamente
+      complex: 0.1

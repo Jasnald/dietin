@@ -1,0 +1,10 @@
+meal: "Marmita de Wrap (1/5)"
+protein:
+  - name: Hackfleisch_Rind
+    grams: 200  # 1000g / 5
+carbo:
+  - name: Tortilla_Wrap
+    grams: 124  # 620g / 5
+vegetables:
+  - name: Tomate_Pelado
+    grams: 80   # 400g / 5

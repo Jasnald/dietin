@@ -1,0 +1,13 @@
+Hackfleisch_Rind: # Carne Moída Bovina (Crua)
+  macros:
+    protein: 18.0
+    fat: 12.0  # Padrão é ~18-20%. Se drenou a gordura, considere usar uns 12g aqui.
+    carbohydrate: 0.0
+    fiber: 0.0
+
+Hackfleisch_Mix: # Carne Moída Mista (Crua)
+  macros:
+    protein: 18.0
+    fat: 12.0  # Padrão é ~18-20%. Se drenou a gordura, considere usar uns 12g aqui.
+    carbohydrate: 0.0
+    fiber: 0.0

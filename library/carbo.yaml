@@ -1,0 +1,10 @@
+Tortilla_Wrap: # Massa de trigo
+  macros:
+    protein: 8.0
+    fat: 6.0
+    carbohydrate: 52.0
+    fiber: 2.5
+  distributions:
+    carbohydrate:
+      sugars: 0.05
+      complex: 0.95

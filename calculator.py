@@ -1,121 +1,137 @@
 import yaml
-import dataclasses
-from collections import defaultdict
 from pathlib import Path
-from loader import load_library
+from loader import load_library, load_yaml
 
+def find_meal_data(query_name):
+    """
+    Search for a meal by filename OR by the 'meal' title inside the files.
+    """
+    meals_dir = Path('meals')
+    
+    # 1. Strategy: Direct Filename Match
+    # Checks if 'meals/query_name.yaml' exists
+    exact_file = meals_dir / f"{query_name}.yaml"
+    if exact_file.exists():
+        return load_yaml(exact_file)
+
+    print(f"   ... searching for '{query_name}' inside files ...")
+    
+    for file_path in meals_dir.glob('*.yaml'):
+        data = load_yaml(file_path)
+        # Compare the meal title (exact match)
+        if data.get('meal') == query_name:
+            print(f"   -> Found inside '{file_path.name}'")
+            return data
+
+    return None
+
+def calculate_meal_calories(totals):
+    totals['calories'] = (
+        totals['protein'] * 4 + 
+        totals['carbohydrate'] * 4 + 
+        totals['fat'] * 9
+        )
+    return totals['calories']
+
+def print_nutrition_report(totals):
+    print("=" * 40)
+    print(f"Protein:      {totals['protein']:.1f}g")
+    print(f"Carbs:        {totals['carbohydrate']:.1f}g")
+    print(f"  ├─ Sugars:  {totals['sugars']:.1f}g")
+    print(f"  └─ Complex: {totals['complex_carbs']:.1f}g")
+    print(f"Fat:          {totals['fat']:.1f}g")
+    print(f"Fiber:        {totals['fiber']:.1f}g")
+    print("-" * 40)
+    print(f"Calories:     {totals['calories']:.0f} kcal")
+    
+def totals_dict():
+    return {
+        'protein': 0.0, 'fat': 0.0, 'carbohydrate': 0.0, 
+        'fiber': 0.0, 'sugars': 0.0, 'complex_carbs': 0.0, 'calories': 0.0
+    }
 
 def calculate_nutrition(meal_list):
-    """
-    Calculates total nutrition from a list of meals.
-    
-    Args:
-        meal_list: List of meal names (without .yaml extension)
-    
-    Returns:
-        Dictionary with total macros
-    """
     library = load_library()
     
-    totals = {
-        'protein': 0.0,
-        'fat': 0.0,
-        'carbohydrate': 0.0,
-        'fiber': 0.0,
-        'sugars': 0.0,
-        'complex_carbs': 0.0,
-        'calories': 0.0
-    }
+    totals = totals_dict()
     
     print(f"Calculating nutrition for: {', '.join(meal_list)}\n")
     
-    for meal_name in meal_list:
-        meal_path = Path('meals') / f"{meal_name}.yaml"
-        
-        if not meal_path.exists():
-            print(f"ERROR: Meal '{meal_name}' not found.")
+    for query in meal_list:
+        # Use the new search function
+        meal_data = find_meal_data(query)
+
+        if not meal_data:
+            print(f"ERROR: Meal '{query}' not found (neither as file nor as title).")
             continue
         
-        with open(meal_path, 'r', encoding='utf-8') as f:
-            meal_data = yaml.safe_load(f)
+        meal_title = meal_data.get('meal', query)
+        print(f"--- {meal_title} ---")
         
-        print(f"--- {meal_data.get('meal', meal_name)} ---")
+        # Categories to scan for food items
+        categories = ['foods', 'protein', 'carbo', 'fat', 'vegetables', 'extras']
         
-        for item in meal_data.get('foods', []):
-            food_name = item['name']
+        items_found = False
+        
+        for category in categories:
+            item_list = meal_data.get(category)
+            
+            if item_list:
+                for item in item_list:
+                    items_found = True
+                    food_name = item['name']
+                    
+                    # Quantity Logic (Grams vs Servings)
+                    if 'grams' in item:
+                        multiplier = item['grams'] / 100.0
+                        display_qty = f"{item['grams']}g"
+                    elif 'servings' in item:
+                        multiplier = item['servings']
+                        display_qty = f"{multiplier}x"
+                    else:
+                        multiplier = 1.0
+                        display_qty = "1x"
+                    
+                    food_obj = library.get(food_name)
+                    if not food_obj:
+                        print(f"    WARNING: '{food_name}' not in library.")
+                        continue
+                    
+                    # Calculations
+                    p = food_obj.protein.amount * multiplier
+                    f = food_obj.fat.amount * multiplier
+                    c = food_obj.carbohydrate.amount * multiplier
+                    fib = food_obj.fiber.amount * multiplier
+                    
+                    sug = food_obj.carbohydrate.sugars * multiplier
+                    cplx = food_obj.carbohydrate.complex * multiplier
+                    
+                    # Totals Update
+                    totals['protein'] += p
+                    totals['fat'] += f
+                    totals['carbohydrate'] += c
+                    totals['fiber'] += fib
+                    totals['sugars'] += sug
+                    totals['complex_carbs'] += cplx
+                    
+                    calculate_meal_calories(totals)
+                    print_nutrition_report(totals)
 
-            if 'grams' in item:
-                # Se for peso, assume que a base do alimento é 100g
-                multiplier = item['grams'] / 100.0
-                display_qty = f"{item['grams']}g"
-            elif 'servings' in item:
-                multiplier = item['servings']
-                display_qty = f"{multiplier}x"
-            else:
-                multiplier = 1.0
-                display_qty = "1x"
-            
-            food_obj = library.get(food_name)
-            if not food_obj:
-                print(f"WARNING: '{food_name}' not in library.")
-                continue
-            
-            # Calculate amounts
-            p = food_obj.protein.amount * multiplier
-            f = food_obj.fat.amount * multiplier
-            c = food_obj.carbohydrate.amount * multiplier
-            fib = food_obj.fiber.amount * multiplier
-            
-            sug = food_obj.carbohydrate.sugars * multiplier
-            cplx = food_obj.carbohydrate.complex * multiplier
-            
-            # Update totals
-            totals['protein'] += p
-            totals['fat'] += f
-            totals['carbohydrate'] += c
-            totals['fiber'] += fib
-            totals['sugars'] += sug
-            totals['complex_carbs'] += cplx
-            
-            print(f"  {food_name} ({display_qty}): P={p:.1f}g C={c:.1f}g F={f:.1f}g")
+        if not items_found:
+            print("  (No food items found in this meal)")
         
         print()
-
     
-    # Calculate total calories
-    totals['calories'] = (
-        totals['protein'] * 4 +
-        totals['carbohydrate'] * 4 +
-        totals['fat'] * 9
-    )
+    # Calorie Calculation
+    calculate_meal_calories(totals)
     
-    # Print summary
-    print("=" * 20)
-    print("DAILY TOTALS")
-    print("=" * 20)
-    print(f"Protein:         {totals['protein']:.1f}g")
-    print(f"Carbohydrate:    {totals['carbohydrate']:.1f}g")
-    print(f"  ├─ Sugars:     {totals['sugars']:.1f}g ({totals['sugars']/totals['carbohydrate']*100:.0f}%)" if totals['carbohydrate'] > 0 else "")
-    print(f"  └─ Complex:    {totals['complex_carbs']:.1f}g ({totals['complex_carbs']/totals['carbohydrate']*100:.0f}%)" if totals['carbohydrate'] > 0 else "")
-    print(f"Fat:             {totals['fat']:.1f}g")
-    print(f"Fiber:           {totals['fiber']:.1f}g")
-    print(f"\nTotal Calories:  {totals['calories']:.0f} kcal")
-    
-    # Macro ratios
-    print("\n" + "=" * 20)
-    print("MACRO DISTRIBUTION")
-    print("=" * 20)
-    protein_pct = (totals['protein'] * 4 / totals['calories']) * 100
-    carb_pct = (totals['carbohydrate'] * 4 / totals['calories']) * 100
-    fat_pct = (totals['fat'] * 9 / totals['calories']) * 100
-    
-    print(f"Protein:      {protein_pct:.1f}%")
-    print(f"Carbohydrate: {carb_pct:.1f}%")
-    print(f"Fat:          {fat_pct:.1f}%")
+    # Final Report
+    print_nutrition_report(totals)
     
     return totals
 
-
 if __name__ == "__main__":
-    my_day = ['yogurte']  # List of meal names to calculate
+    # Agora você pode passar o NOME EXATO que está dentro do yaml
+    # Exemplo: Se no lunch.yaml está 'meal: Marmita de Wrap (1/5)'
+    my_day = ['Marmita de Wrap (1/5)', 'yogurte'] 
     calculate_nutrition(my_day)
