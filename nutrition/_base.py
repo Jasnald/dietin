@@ -1,18 +1,19 @@
 import dataclasses
-from ._base import Macro
+from abc import ABC, abstractmethod
 
 
 @dataclasses.dataclass
-class Protein(Macro):
-    """Protein macronutrient in grams."""
-    
-    amount: float = 0.0
+class Macro(ABC):
+    """
+    Abstract base class for macronutrients.
+    """
 
-    def set_amount(self, grams: float):
-        """Sets protein amount in grams."""
-        self.amount = grams
-        return self
+    @abstractmethod
+    def set_amount(self, grams: float) -> "Macro":
+        """Sets total amount in grams."""
+        pass
 
-    def set_distribution(self, **kwargs):
-        """Protein has no subcategories."""
-        return self
+    @abstractmethod
+    def set_distribution(self, **kwargs) -> "Macro":
+        """Distributes into subcategories if applicable."""
+        pass
