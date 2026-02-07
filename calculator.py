@@ -26,6 +26,7 @@ def find_meal_data(query_name):
     return None
 
 def calculate_meal_calories(totals):
+
     totals['calories'] = (
         totals['protein'] * 4 + 
         totals['carbohydrate'] * 4 + 
@@ -34,6 +35,7 @@ def calculate_meal_calories(totals):
     return totals['calories']
 
 def print_nutrition_report(totals):
+
     print("=" * 40)
     print(f"Protein:      {totals['protein']:.1f}g")
     print(f"Carbs:        {totals['carbohydrate']:.1f}g")
@@ -50,6 +52,54 @@ def totals_dict():
         'fiber': 0.0, 'sugars': 0.0, 'complex_carbs': 0.0, 'calories': 0.0
     }
 
+def calculate_nutrient_values(multiplier, food_obj):
+
+    p = food_obj.protein.amount * multiplier
+    f = food_obj.fat.amount * multiplier
+    c = food_obj.carbohydrate.amount * multiplier
+    fib = food_obj.fiber.amount * multiplier
+    
+    sug = food_obj.carbohydrate.sugars * multiplier
+    cplx = food_obj.carbohydrate.complex * multiplier
+    return p, f, c, fib, sug, cplx
+
+def update_totals(obj, params):
+
+    p, f, c, fib, sug, cplx = params
+    obj['protein'] += p
+    obj['fat'] += f
+    obj['carbohydrate'] += c
+    obj['fiber'] += fib
+    obj['sugars'] += sug
+    obj['complex_carbs'] += cplx
+
+def categories_iteration(categories, meal_data):
+
+    item_list =[]
+    for library_cat in categories:
+        item_i = meal_data.get(library_cat, [])
+        item_list.extend(item_i)
+
+    return item_list
+
+def macro_iteration(item_list, library, totals):
+
+    for item in item_list:
+        food_name = item['name']
+        
+        # Quantity Logic (Grams vs Servings)
+        if 'grams' in item:
+            multiplier = item['grams'] / 100.0
+        elif 'servings' in item:
+            multiplier = item['servings']
+        else:
+            multiplier = 1.0
+        
+        food_obj = library.get(food_name)   
+        params = calculate_nutrient_values(multiplier, food_obj)
+        update_totals(totals, params)
+
+
 def calculate_nutrition(meal_list):
     library = load_library()
     
@@ -57,68 +107,20 @@ def calculate_nutrition(meal_list):
     
     print(f"Calculating nutrition for: {', '.join(meal_list)}\n")
     
-    for query in meal_list:
+    for meal in meal_list:
         # Use the new search function
-        meal_data = find_meal_data(query)
+        meal_data = find_meal_data(meal)
 
-        if not meal_data:
-            print(f"ERROR: Meal '{query}' not found (neither as file nor as title).")
-            continue
-        
-        meal_title = meal_data.get('meal', query)
+        meal_title = meal_data.get('meal', meal)
         print(f"--- {meal_title} ---")
         
         # Categories to scan for food items
-        categories = ['foods', 'protein', 'carbo', 'fat', 'vegetables', 'extras']
+        library_cat = ['foods', 'protein', 'carbo', 'fat', 'vegetables', 'extras']
         
-        items_found = False
-        
-        for category in categories:
-            item_list = meal_data.get(category)
-            
-            if item_list:
-                for item in item_list:
-                    items_found = True
-                    food_name = item['name']
-                    
-                    # Quantity Logic (Grams vs Servings)
-                    if 'grams' in item:
-                        multiplier = item['grams'] / 100.0
-                        display_qty = f"{item['grams']}g"
-                    elif 'servings' in item:
-                        multiplier = item['servings']
-                        display_qty = f"{multiplier}x"
-                    else:
-                        multiplier = 1.0
-                        display_qty = "1x"
-                    
-                    food_obj = library.get(food_name)
-                    if not food_obj:
-                        print(f"    WARNING: '{food_name}' not in library.")
-                        continue
-                    
-                    # Calculations
-                    p = food_obj.protein.amount * multiplier
-                    f = food_obj.fat.amount * multiplier
-                    c = food_obj.carbohydrate.amount * multiplier
-                    fib = food_obj.fiber.amount * multiplier
-                    
-                    sug = food_obj.carbohydrate.sugars * multiplier
-                    cplx = food_obj.carbohydrate.complex * multiplier
-                    
-                    # Totals Update
-                    totals['protein'] += p
-                    totals['fat'] += f
-                    totals['carbohydrate'] += c
-                    totals['fiber'] += fib
-                    totals['sugars'] += sug
-                    totals['complex_carbs'] += cplx
-                    
-                    calculate_meal_calories(totals)
-                    print_nutrition_report(totals)
+        macro_source_list = categories_iteration(library_cat, meal_data)
 
-        if not items_found:
-            print("  (No food items found in this meal)")
+        macro_iteration(macro_source_list, library, totals)
+
         
         print()
     
@@ -133,5 +135,5 @@ def calculate_nutrition(meal_list):
 if __name__ == "__main__":
     # Agora você pode passar o NOME EXATO que está dentro do yaml
     # Exemplo: Se no lunch.yaml está 'meal: Marmita de Wrap (1/5)'
-    my_day = ['Marmita de Wrap (1/5)', 'yogurte'] 
+    my_day = ['Marmita de Wrap (1/5)', 'Marmita de Wrap (1/5)', 'yogurte'] 
     calculate_nutrition(my_day)
