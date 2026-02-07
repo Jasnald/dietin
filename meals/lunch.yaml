@@ -6,5 +6,18 @@ carbo:
   - name: Tortilla_Wrap
     grams: 124  # 620g / 5
 vegetables:
-  - name: Tomate_Pelado
-    grams: 80   # 400g / 5
+  - name: Gemuesemischung_Rewe
+    grams: 90   # 400g / 5
+
+---
+
+meal: "Marmita de Salmão (1/5)"
+protein:
+  - name: WildLachs
+    grams: 150  # 1000g / 5
+carbo:
+  - name: Cross_potato
+    grams: 240  # 620g / 5
+vegetables:
+  - name: Gemuesemischung_Rewe
+    grams: 90   # 400g / 5

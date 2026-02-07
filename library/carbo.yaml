@@ -8,3 +8,24 @@ Tortilla_Wrap: # Massa de trigo
     carbohydrate:
       sugars: 0.05
       complex: 0.95
+
+Buttertoast:
+  macros: 
+    protein: 9.0 
+    fat: 3.8 
+    carbohydrate: 48.0 
+    fiber: 3.5 
+  distributions: 
+    carbohydrate: 
+      sugars: 0.05 # 2.5g de açúcar em 48g totais complex: 0.95
+
+Cross_potato: # Baseado na foto (181kcal/100g)
+  macros:
+    protein: 3.0       #
+    fat: 7.0           #
+    carbohydrate: 25.0 #
+    fiber: 3.0         #
+  distributions:
+    carbohydrate:
+      sugars: 0.04     # 1g de açúcar em 25g totais
+      complex: 0.96

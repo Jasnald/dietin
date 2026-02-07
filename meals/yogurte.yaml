@@ -8,3 +8,10 @@ foods:
     grams: 25.0      # 25g (uma colherada)
   - name: Knackebrot
     grams: 15.0      # 15g (umas 2 ou 3 fatias grandes)
+
+---
+
+meal: "Whey_maquina"
+protein:
+  - name: Whey_maquina
+    grams: 100     # 30g (uma medida cheia)

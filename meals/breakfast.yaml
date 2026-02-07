@@ -1,0 +1,7 @@
+meal: Pao_com_ovo
+protein:
+  - name: Ovo_Unidade
+    grams: 110
+carbo:
+  - name: Buttertoast
+    grams: 50

@@ -4,24 +4,26 @@ from loader import load_library, load_yaml
 
 def find_meal_data(query_name):
     """
-    Search for a meal by filename OR by the 'meal' title inside the files.
+    Busca uma refeição pelo nome.
+    Agora suporta arquivos com MÚLTIPLAS refeições separadas por '---'.
     """
     meals_dir = Path('meals')
     
-    # 1. Strategy: Direct Filename Match
-    # Checks if 'meals/query_name.yaml' exists
-    exact_file = meals_dir / f"{query_name}.yaml"
-    if exact_file.exists():
-        return load_yaml(exact_file)
-
-    print(f"   ... searching for '{query_name}' inside files ...")
-    
+    # Varre todos os arquivos .yaml na pasta meals
     for file_path in meals_dir.glob('*.yaml'):
-        data = load_yaml(file_path)
-        # Compare the meal title (exact match)
-        if data.get('meal') == query_name:
-            print(f"   -> Found inside '{file_path.name}'")
-            return data
+        with open(file_path, 'r', encoding='utf-8') as f:
+            try:
+                # O safe_load_all lê o arquivo em pedaços (separados por ---)
+                # Convertemos para lista para poder procurar dentro
+                docs = list(yaml.safe_load_all(f))
+                
+                for doc in docs:
+                    # Verifica se o documento é válido e se tem o nome que queremos
+                    if doc and doc.get('meal') == query_name:
+                        print(f"   -> Encontrado dentro de '{file_path.name}'")
+                        return doc
+            except yaml.YAMLError as e:
+                print(f"Erro ao ler {file_path.name}: {e}")
 
     return None
 
@@ -151,5 +153,5 @@ def calculate_nutrition(meal_list):
 if __name__ == "__main__":
     # Agora você pode passar o NOME EXATO que está dentro do yaml
     # Exemplo: Se no lunch.yaml está 'meal: Marmita de Wrap (1/5)'
-    my_day = ['Marmita de Wrap (1/5)', 'Marmita de Wrap (1/5)', 'yogurte'] 
+    my_day = ['Marmita de Wrap (1/5)', 'Marmita de Salmão (1/5)', 'Iogurte Turbinado', 'Pao_com_ovo', 'Whey_maquina'] 
     calculate_nutrition(my_day)

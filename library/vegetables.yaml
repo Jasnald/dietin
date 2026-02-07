@@ -8,3 +8,14 @@ Tomate_Pelado: # Lata de tomate
     carbohydrate:
       sugars: 0.9 # Tomate é frutose basicamente
       complex: 0.1
+
+Gemuesemischung_Rewe: # Mix congelado (Cenoura, Brócolis, Couve-Flor, Ervilha)
+  macros:
+    protein: 2.5
+    fat: 0.5
+    carbohydrate: 5.5
+    fiber: 3.5          # Fibra honesta (especialmente se tiver ervilha/vagem)
+  distributions:
+    carbohydrate:
+      sugars: 0.4       # Açúcar natural dos vegetais
+      complex: 0.6
