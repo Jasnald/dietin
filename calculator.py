@@ -99,6 +99,9 @@ def macro_iteration(item_list, library, totals):
         params = calculate_nutrient_values(multiplier, food_obj)
         update_totals(totals, params)
 
+def add_to_daily(daily, meal):
+    for key in daily:
+        daily[key] += meal[key]
 
 def calculate_nutrition(meal_list):
     library = load_library()
@@ -110,7 +113,7 @@ def calculate_nutrition(meal_list):
     for meal in meal_list:
         # Use the new search function
         meal_data = find_meal_data(meal)
-
+        meal_total = totals_dict() 
         meal_title = meal_data.get('meal', meal)
         print(f"--- {meal_title} ---")
         
@@ -119,7 +122,20 @@ def calculate_nutrition(meal_list):
         
         macro_source_list = categories_iteration(library_cat, meal_data)
 
-        macro_iteration(macro_source_list, library, totals)
+        macro_iteration(
+            macro_source_list, 
+            library, 
+            meal_total
+            )
+        
+        calculate_meal_calories(meal_total)
+        
+        print_nutrition_report(meal_total)
+        
+        add_to_daily(
+            totals, 
+            meal_total
+            )
 
         
         print()
