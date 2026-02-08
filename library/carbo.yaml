@@ -29,3 +29,25 @@ Cross_potato: # Baseado na foto (181kcal/100g)
     carbohydrate:
       sugars: 0.04     # 1g de açúcar em 25g totais
       complex: 0.96
+
+Imperial_Rice_Rewe: # Arroz branco cozido (Pacote de 1kg)
+  macros:
+    protein: 7.5
+    fat: 1.3
+    carbohydrate: 75.0
+    fiber: 1.6
+  distributions:
+    carbohydrate:
+      sugars: 0.0133      # 1/75 = 0.0133 arredondado
+      complex: 0.9867
+
+Paniermehl_Ja: # Farinha de rosca (Panko)
+  macros:
+    protein: 12.0
+    fat: 1.4
+    carbohydrate: 70.0
+    fiber: 4.5
+  distributions:
+    carbohydrate:
+      sugars: 0.064      # 70g de carbo, sendo 4.5g açúcar = 0.064
+      complex: 0.936

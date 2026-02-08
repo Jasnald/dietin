@@ -35,10 +35,10 @@ Müsli_Rewe: # O pacote de Müsli Crocante
 
 Knackebrot: # O "pão seco" (Estimativa padrão, confira se tiver o pacote)
   macros:
-    protein: 10.0
-    fat: 2.0
-    carbohydrate: 58.0
-    fiber: 20.0        # Isso é fibra pra caramba! (20% do peso)
+    protein: 13.0
+    fat: 5.0
+    carbohydrate: 46.0
+    fiber: 26.0        # Isso é fibra pra caramba! (20% do peso)
   distributions:
     carbohydrate:
       sugars: 0.03     # Quase nada de açúcar (1.5g)

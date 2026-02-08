@@ -21,3 +21,21 @@ carbo:
 vegetables:
   - name: Gemuesemischung_Rewe
     grams: 90   # 400g / 5
+
+---
+
+meal: MP_Arroz com Frango (1/5)
+protein:
+  - name: Frango_Peito
+    grams: 180  # 900g / 5
+carbo:
+  - name: Imperial_Rice_Rewe
+    grams: 50  # 250g / 5
+  - name: Paniermehl_Ja
+    grams: 50  # 250g / 5
+vegetables:
+  - name: Gemuesemischung_Rewe
+    grams: 90   # 400g / 5
+fat:
+  - name: Butter_Irish_Rewe
+    grams: 10   # 10g / 5

@@ -12,16 +12,16 @@ Hackfleisch_Mix: # Carne Moída Mista (Crua)
     carbohydrate: 0.0
     fiber: 0.0
 
-Ovo_Unidade: 
-  macros: 
-    protein: 6.0 
-    fat: 5.0 
-    carbohydrate: 0.6 
-    fiber: 0.0 
-  distributions: 
-      carbohydrate: 
-        sugars: 0.0 
-        complex: 1.0
+Ovo_Unidade:
+  macros:
+    protein: 7.0
+    fat: 6.0
+    carbohydrate: 0.6
+    fiber: 0.0
+  distributions:
+    carbohydrate:
+      sugars: 0.1
+      complex: 0.9
 
 Whey_maquina:
   macros:
@@ -38,5 +38,12 @@ WildLachs: # Salmão Selvagem (Cru)
   macros:
     protein: 20.0
     fat: 3.0
+    carbohydrate: 0.0
+    fiber: 0.0
+
+Frango_Peito: # Peito de Frango (Cru)
+  macros:
+    protein: 21.0
+    fat: 2.0
     carbohydrate: 0.0
     fiber: 0.0
